@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sonsuz Aşk Oyunu 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #ffd6e0, #ffe5ec);
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      margin-top: 1rem;
+      color: #d6336c;
+      font-size: 2rem;
+      text-shadow: 0 0 5px white;
+    }
+
+    #gameArea {
+      margin-top: 1rem;
+      width: 90%;
+      max-width: 400px;
+      height: 400px;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 2rem;
+      cursor: pointer;
+      animation: float 4s linear forwards;
+      color: white; /* Beyaz kalp */
+    }
+
+    @keyframes float {
+      0% { top: 100%; opacity: 0; }
+      20% { opacity: 1; }
+      100% { top: -40px; opacity: 0; }
+    }
+
+    #score {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #d6336c;
+    }
+
+    .btn {
+      margin-top: 1rem;
+      background: #ff4d6d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    .btn:hover {
+      background: #ff6b81;
+    }
+
+    #message {
+      margin-top: 2rem;
+      display: none;
+      animation: fadeIn 2s ease forwards;
+      text-align: center;
+    }
+
+    #message p {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.5rem;
+      color: #ff3366;
+    }
+
+    #message img {
+      width: 150px;
+      margin-top: 1rem;
+      border-radius: 15px;
+      box-shadow: 0 0 15px pink;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .burst {
+      position: absolute;
+      font-size: 2rem;
+      animation: explode 1s ease-out forwards;
+      color: white;
+      user-select: none;
+      pointer-events: none;
+      filter: drop-shadow(0 0 4px #ff66aa);
+      z-index: 9999;
+    }
+
+    @keyframes explode {
+      0% { 
+        transform: scale(0) rotate(0deg); 
+        opacity: 1; 
+        color: white;
+      }
+      50% {
+        color: #ff99cc;
+      }
+      100% { 
+        transform: scale(2) rotate(360deg); 
+        opacity: 0; 
+        color: #ff66aa;
+      }
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kalbim Hep Seninle 💖</h1>
+  <div id="gameArea"></div>
+  <div id="score">Skorun: 0</div>
+  <button class="btn" onclick="showLove()">Sürprizi Gör 🎁</button>
+
+  <div id="message">
+    <p>Bu oyunu da, kalbimi de kazandın...<br>İyi ki varsın desem az gelir, sen bana iyi ki yarsın.</p>
+    <img src="1723.jpeg" alt="Aşkımız" />
+  </div>
+
+  <audio id="bgMusic" src="muzik.mp3" loop></audio>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const scoreText = document.getElementById("score");
+    const button = document.querySelector(".btn");
+    const message = document.getElementById("message");
+    const music = document.getElementById("bgMusic");
+
+    let score = 0;
+    const maxScore = 10;
+
+    function spawnHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerText = "💖";
+      heart.style.left = Math.random() * 90 + "%";
+      heart.style.top = "100%";
+
+      heart.onclick = () => {
+        // Patlama efekti oluştur
+        const burst = document.createElement("div");
+        burst.className = "burst";
+        burst.innerText = "💖";
+        burst.style.left = heart.style.left;
+        burst.style.top = heart.style.top;
+        burst.style.position = "absolute";
+        gameArea.appendChild(burst);
+
+        // Patlama animasyonundan sonra temizle
+        setTimeout(() => burst.remove(), 1000);
+
+        // Kalbi kaldır, skoru arttır
+        heart.remove();
+        score++;
+        scoreText.innerText = `Skorun: ${score}`;
+
+        if (score === maxScore) {
+          button.style.display = "inline-block";
+        }
+      };
+
+      gameArea.appendChild(heart);
+      setTimeout(() => heart.remove(), 4000);
+    }
+
+    setInterval(spawnHeart, 800);
+
+    function showLove() {
+      message.style.display = "block";
+      button.style.display = "none";
+      explodeHearts();
+      music.play();
+    }
+
+    function explodeHearts() {
+      for (let i = 0; i < 20; i++) {
+        const burst = document.createElement("div");
+        burst.className = "burst";
+        burst.innerText = "💖";
+        burst.style.left = Math.random() * 100 + "%";
+        burst.style.top = Math.random() * 100 + "%";
+        burst.style.position = "absolute";
+        document.body.appendChild(burst);
+        setTimeout(() => burst.remove(), 1000);
+      }
+    }
+  </script>
+</body>
+</html>
